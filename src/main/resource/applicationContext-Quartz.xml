@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- channel job, reloadChannel at 01:05 -->
+	<bean id="channelReloadJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adStatsService" />
+		<property name="targetMethod" value="reloadChannel" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="channelTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="channelReloadJob" />
+		<property name="cronExpression" value="0 5 1 * * ?" />
+	</bean>
+	
+	<!-- geo job, reloadGEO at 01:10 -->
+	<bean id="geoReloadJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adStatsService" />
+		<property name="targetMethod" value="reloadGEO" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="geoTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="geoReloadJob" />
+		<property name="cronExpression" value="0 10 1 * * ?" />
+	</bean>
+	
+	<!-- ad slot job, reloadAdSlot at 01:15 -->
+	<bean id="adSlotReloadJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adStatsService" />
+		<property name="targetMethod" value="reloadAdSlot" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="adSlotTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="adSlotReloadJob" />
+		<property name="cronExpression" value="0 15 1 * * ?" />
+	</bean>
+	
+	<!-- ad type job, reloadAdType at 01:20 -->
+	<bean id="adTypeReloadJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adStatsService" />
+		<property name="targetMethod" value="reloadAdType" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="adTypeTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="adTypeReloadJob" />
+		<property name="cronExpression" value="0 20 1 * * ?" />
+	</bean>
+	
+	<!-- segment job, reloadSegment at 01:25 -->
+	<bean id="segmentReloadJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adStatsService" />
+		<property name="targetMethod" value="reloadSegment" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="segmentTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="segmentReloadJob" />
+		<property name="cronExpression" value="0 25 1 * * ?" />
+	</bean>
+		
+	<!-- scheduler -->
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="channelTrigger"/>
+				<ref local="geoTrigger"/>
+				<ref local="adSlotTrigger"/>
+				<ref local="adTypeTrigger"/>
+				<ref local="segmentTrigger"/>
+			</list>
+		</property>
+		<property name="autoStartup">
+			<value>true</value>
+		</property>
+	</bean>
+	
+</beans>
